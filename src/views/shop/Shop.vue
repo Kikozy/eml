@@ -35,15 +35,19 @@
             <div class="tab-item">商家</div>
         </div>
     </div>
+    <Order />
 </template>
 
 <script>
 import { reactive , computed} from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-// import axios from 'axios'
+import Order from './Order'
 export default {
     name: 'Shop',
+    components: {
+        Order
+    },
     setup(){
         const route = useRoute()
         const store = useStore()
