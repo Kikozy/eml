@@ -4,17 +4,17 @@
             <img src="" alt="">
         </div>
         <div class="goodsText">
-            <div class="goodsName">{{goodsData.name}}</div>
-            <span class="goodsDesc">{{goodsData.desc}}</span>
+            <div class="goodsName">{{data.goods_name}}</div>
+            <span class="goodsDesc">{{data.goods_desc}}</span>
             <div class="goodsModifier">
-                <span>{{goodsData.modifier.xiaoliang}}</span>
-                <span>{{goodsData.modifier.pingjia}}</span>
+                <span>{{data.goods_sales}}</span>
+                <span>{{data.goods_score}}</span>
             </div>
-            <div class="goodsPrice">{{goodsData.price}}</div>
+            <div class="goodsPrice">{{data.goods_price}}</div>
         </div>
-        <CountingBoard
+        <!-- <CountingBoard
             :goodsData = 'goodsData'
-        />
+        /> -->
     </div>
 </template>
 
@@ -22,7 +22,7 @@
 // import CountingBoard from './CountingBoard'
 export default {
     name: 'GoodsItem',
-    props: ['goodsData'],
+    props: ['data'],
     // components: {
     //     CountingBoard
     // },

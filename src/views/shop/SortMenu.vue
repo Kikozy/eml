@@ -1,30 +1,46 @@
 <template>
     <div class="sortMenu">
-        <div class="sortItem" v-for="(item,index) in sortName" :key="index+item">{{item}}</div>
+        <div class="sortItem" v-for="(item,index) in sortList" :key="index+item" @click="changeSort(item)">{{item}}</div>
     </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
+import { useStore } from 'vuex'
 import axios from 'axios'
 export default {
     name: 'SortMenu',
-    setup(){
-        
+    props: ['shopId'],
+    setup(props){
+        let sortList = reactive([])
+        const store = useStore()
         axios.post(`http://localhost:8848/getGoodsType`,{
-            shopId: ''
+            shopId: props.shopId
         })
         .then((res)=>{
-            console.log(res)
+            sortList = res.data.forEach(item => {
+                sortList.push(item.goods_type)
+            });
         })
         .catch((err)=>{
             console.log(err)
         })
-        const data = reactive({
-            sortName: ['热销','优惠','推荐','┎🤩┒新品来袭','┎🍦┒鲜冰淇淋','┎🍋┒真鲜果茶','┎🔥┒益菌多多','┎🥤┒现煮奶茶']
-        })
+
+        function changeSort(sort){
+            axios.post('http://localhost:8848/getGoodsList',{
+                shop_id: props.shopId,
+                goods_sort: sort
+            })
+            .then((data)=>{
+                store.commit('changeGoodsList',data.data)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
         return {
-            ...toRefs(data)
+            sortList,
+            changeSort
         }
     }
 }
@@ -34,17 +50,17 @@ export default {
     .sortMenu {
         display: flex;
         flex-direction: column;
-        min-height: 450px;
+        height: 300px;
         background-color: #f5f5f5;
         .sortItem {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 80px;
-            height: 50px;
-            font-size: 12px;
+            width: 21.33rem;
+            height: 13.33rem;
+            font-size: 3.2rem;
             color: #666666;
-            
+
             padding: 0 5px;
         }
     }

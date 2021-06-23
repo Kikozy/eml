@@ -3,12 +3,15 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    shopList:[]
+    shopList:[],
+    goodsList: []
   },
   mutations: {
     initShopList(state,data){
-      console.log('mutations')
       state.shopList = data
+    },
+    changeGoodsList(state,data){
+      state.goodsList = data
     }
   },
   actions: {

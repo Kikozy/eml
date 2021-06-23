@@ -20,6 +20,9 @@
                 giao(){
                     console.log(this.message)
                 }
+            },
+            created(){
+                console.log(this.$options.methods.giao)
             }
         })
     </script>
