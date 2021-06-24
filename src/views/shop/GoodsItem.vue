@@ -12,20 +12,18 @@
             </div>
             <div class="goodsPrice">{{data.goods_price}}</div>
         </div>
-        <!-- <CountingBoard
-            :goodsData = 'goodsData'
-        /> -->
+        <CountingBoard :data='data'/>
     </div>
 </template>
 
 <script>
-// import CountingBoard from './CountingBoard'
+import CountingBoard from './CountingBoard'
 export default {
     name: 'GoodsItem',
     props: ['data'],
-    // components: {
-    //     CountingBoard
-    // },
+    components: {
+        CountingBoard
+    },
     setup(){
     }
 }

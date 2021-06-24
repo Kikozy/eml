@@ -1,73 +1,66 @@
 <template>
-  <div class="countingBoard" ref="countingBoardRef">
+  <div class="countingBoard" >
       <button v-if="count>0" class="reduceBtn" @click="reduceFun">-</button>
       <span v-if="count>0" class="text">{{count}}</span>
       <button class="addBtn" @click="addFun">+</button>
-      
   </div>
 </template>
 
 <script>
-import {computed, reactive, ref , watch} from 'vue'
+import { computed } from '@vue/runtime-core'
+
+import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
     name: 'CountingBoard',
-    props: ['goodsData'],
+    props: ['data'],
     setup(props){
         const store = useStore()
-        const countingBoardRef = ref(null)
-        
-        const shopId = 'shop001'
-        const goodsData = reactive(props.goodsData)
-        console.log('?',goodsData.goodsId)
-        function addFun(){
-            /* 添加一个到购物车
-                1. VUEX中存在的就+1
-                2. VUEX中不存在的就创建
-            */
-           if(store.state.cartList[shopId][goodsData.goodsId])
-           {
-               console.log('存在+1')
-               store.commit('addCount',{
-                   shopId,
-                   goodsId: goodsData.goodsId
+        const route = useRoute()
+        const shop_id = store.state.shopList[route.params.shopIndex].shop_id
+        const count = computed(()=> store.state.cartList?.[shop_id]?.[props.data.goods_id]?.goods_count)
+        // const checkShop = ()=>{
+
+        // }
+        const chekGoods = ()=>{
+            if(store.state.cartList[shop_id]?.[props.data.goods_id])
+            {
+                console.log('存在+1')
+                store.commit('addCount',{
+                    shop_id,
+                    goods_id: props.data.goods_id
+                    })
+            }else{
+                console.log('不存在，创建')
+                store.commit('addGoods',{
+                        shop_id,
+                        goods_id: props.data.goods_id,
+                        goods_name: props.data.goods_name,
+                        goods_price: props.data.goods_price
                 })
-           }else{
-               console.log('不存在，创建')
-               store.commit('addGoods',{
-                    shopId,
-                    goodsId: goodsData.goodsId,
-                    name: goodsData.name,
-                    price: goodsData.price,
-                    count: '1'
-               })
-           }
-            
+            }
+        }
+        function addFun(){
+            if(store.state.cartList?.[shop_id])
+            {
+                console.log('y')
+                chekGoods()
+            }else{
+                store.commit('createCartListShop',shop_id)
+                chekGoods()
+            }
+
         }
         function reduceFun(){
             store.commit('reduceCount',{
-                   shopId,
-                   goodsId: goodsData.goodsId
+                   shop_id,
+                   goods_id: props.data.goods_id
             })
         }
-        const count = computed(()=>{
-            return store.state.cartList?.[shopId]?.[goodsData.goodsId]?.count
-        })
-        watch(count,()=>{
-            if(count.value==0){
-                console.log("male")
-                countingBoardRef.value.style.justifyContent = 'flex-end'
-            }else{
-                countingBoardRef.value.style.justifyContent = 'space-between'
-            }
-        })
         return {
             addFun,
             reduceFun,
-            count,
-            countingBoardRef,
-            shopId,
-            store
+            count
         }
 
     }
