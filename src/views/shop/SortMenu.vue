@@ -50,7 +50,7 @@ export default {
     .sortMenu {
         display: flex;
         flex-direction: column;
-        height: 300px;
+        height: 81.8rem;
         background-color: #f5f5f5;
         .sortItem {
             display: flex;

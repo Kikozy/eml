@@ -8,7 +8,6 @@
 
 <script>
 import { computed } from '@vue/runtime-core'
-
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
@@ -25,13 +24,11 @@ export default {
         const chekGoods = ()=>{
             if(store.state.cartList[shop_id]?.[props.data.goods_id])
             {
-                console.log('存在+1')
                 store.commit('addCount',{
                     shop_id,
                     goods_id: props.data.goods_id
                     })
             }else{
-                console.log('不存在，创建')
                 store.commit('addGoods',{
                         shop_id,
                         goods_id: props.data.goods_id,

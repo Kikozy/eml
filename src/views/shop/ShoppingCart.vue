@@ -1,13 +1,13 @@
 <template>
-    <div class="shoppingCart">
+    <div class="shoppingCart" ref="shoppingCartRef">
         <div class="title">
             <span class="text">已选商品</span>
             <span class="clear">清空</span>
         </div>
-        <div class="detailedList" >
+        <div class="detailedList" ref="detailedListRef">
             <div class="detailedItem" v-for="(item,index) in data" :key="item.goods_id+index">
                 <span class="name">{{item.goods_name}}</span>
-                <span class="price">￥{{item.goods_price}}</span>
+                <span class="price">￥{{item.goods_price*item.goods_count}}</span>
                 <div class="controller">
                     <div class="reduce" @click="reduceGoodsCount(item)">-</div>
                     <span>{{item.goods_count}}</span>
@@ -15,46 +15,76 @@
                 </div>
             </div>
         </div>
-        <div class="pay">
-            <div class="icon">
-                <img src="" alt="">
-            </div>
-            
-            <div class="totaled">
-                <span class="heji">￥202</span>
-                <span class="yunfei">另需配送费1元</span>
-            </div>
-            <div class="payTp">去结算</div>
+    </div>
+    <div class="pay" @click="shoppingCartController">
+        <div class="icon">
+            <img src="" alt="">
         </div>
+        
+        <div class="totaled">
+            <span class="heji">￥{{money}}</span>
+            <span class="yunfei">另需配送费1元</span>
+        </div>
+        <div class="payTp">去结算</div>
     </div>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 export default {
     name: 'ShoppingCart',
     setup(){
         const store = useStore()
-        const data = computed(()=>store.state.cartList?.['shop001'])
+        const route = useRoute()
+        const shop_id = store.state.shopList[route.params.shopIndex].shop_id
+        let shoppingCartRef = ref(null)
+        let detailedListRef = ref(null)
+        let shoppingCartState = false
+        const money = computed(()=>{
+            let num = []
+            for( let item in store.state.cartList?.[shop_id]){
+                console.log(store.state.cartList?.[shop_id][item])
+                num += (store.state.cartList[shop_id][item].goods_price*store.state.cartList[shop_id][item].goods_count)
+            }
+            return num
+        })
+        const data = computed(()=>store.state.cartList?.[shop_id])
+        
         function addGoodsCount(item){
-            console.log(item)
             store.commit('addCount',{
-                shop_id: 'shop001',
+                shop_id,
                 goods_id: item.goods_id
             })
         }
         function reduceGoodsCount(item){
-            console.log(item)
             store.commit('reduceCount',{
-                shop_id: 'shop001',
+                shop_id,
                 goods_id: item.goods_id
             })
         }
+        function shoppingCartController(){
+            let shoppingCartHeight = shoppingCartRef.value.getBoundingClientRect().height
+            if(shoppingCartState){
+                shoppingCartRef.value.style.bottom = `-${shoppingCartHeight/375*100}rem`
+                detailedListRef.value.style.overflow = 'visible'
+                detailedListRef.value.style.height = 'auto'
+                shoppingCartState = false
+            }else{
+                shoppingCartRef.value.style.bottom = '12.8rem'
+                shoppingCartRef.value.style.overflow = 'hidden'
+                shoppingCartState = true
+            }
+        }
         return {
             data,
+            money,
+            shoppingCartRef,
+            detailedListRef,
             addGoodsCount,
-            reduceGoodsCount
+            reduceGoodsCount,
+            shoppingCartController
         }
     }
 }
@@ -63,10 +93,11 @@ export default {
 <style lang='scss' scoped>
     .shoppingCart {
         position: fixed;
-        bottom: 0;
+        bottom: -12.8rem;
+        transition: 0.5s;
         display: flex;
         flex-direction: column;
-        width: 100rem;  
+        width: 100rem;
         .title {
             padding: 0 4rem;
             display: flex;
@@ -88,6 +119,8 @@ export default {
             }
         }
         .detailedList {
+            height: 0;
+            overflow: hidden;
             .detailedItem {
                 display: flex;
                 justify-content: space-around;
@@ -137,49 +170,48 @@ export default {
                 }
             }
         }
-        .pay {
-            width: 100rem;
-            position: relative;
+    }
+    .pay {
+        width: 100rem;
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        justify-content: flex-end;
+        background-color: rgba(61,61,63,.9);
+        .icon {
+            position: absolute;
+            left: 15px;
+            top: -15px;
+            width: 13rem;
+            height: 13rem;
+            border-radius: 50%;
+            border: 1rem solid #333333;
+            background-color: #3190e8;
+            img {}
+        }
+        .totaled {
+            width: 50.66rem;
             display: flex;
-            justify-content: flex-end;
-            background-color: rgba(61,61,63,.9);
-            .icon {
-                position: absolute;
-                left: 15px;
-                top: -15px;
-                width: 13rem;
-                height: 13rem;
-                border-radius: 50%;
-                border: 1rem solid #333333;
-                background-color: #3190e8;
-                img {}
-            }
-
-            .totaled {
-                width: 50.66rem;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                .heji {
-                    font-size: 4.8rem;
-                    color: white;
-                }
-                .yunfei {
-                    font-size: 3.2rem;
-                    color: #999999;
-                }
-            }
-            .payTp {
-                width: 28rem;
-                height: 12.8rem;
+            flex-direction: column;
+            justify-content: center;
+            .heji {
+                font-size: 4.8rem;
                 color: white;
-                font-size: 4rem;
-                font-weight: bolder;
-                line-height: 10.66rem;
-                text-align: center;
-                background-color: #38ca73;
             }
-
+            .yunfei {
+                font-size: 3.2rem;
+                color: #999999;
+            }
+        }
+        .payTp {
+            width: 28rem;
+            height: 12.8rem;
+            color: white;
+            font-size: 4rem;
+            font-weight: bolder;
+            line-height: 10.66rem;
+            text-align: center;
+            background-color: #38ca73;
         }
     }
 </style>

@@ -32,7 +32,7 @@ export default {
 <style lang='scss'>
     .goodsList {
         width: 78.66rem;
-        height: 300px;
+        height: 81.8rem;
         overflow: scroll;
     }
 </style>
