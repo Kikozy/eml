@@ -43,7 +43,7 @@ export default {
         let detailedListRef = ref(null)
         let shoppingCartState = false
         const money = computed(()=>{
-            let num = []
+            let num = 0
             for( let item in store.state.cartList?.[shop_id]){
                 console.log(store.state.cartList?.[shop_id][item])
                 num += (store.state.cartList[shop_id][item].goods_price*store.state.cartList[shop_id][item].goods_count)

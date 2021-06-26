@@ -11,6 +11,11 @@ const routes = [
     path: '/shop/:shopIndex',
     name: 'Shop',
     component:()=>import('../views/shop/Shop.vue')
+  },
+  {
+    path: '/pay',
+    name: 'Pay',
+    component: ()=>import('../views/pay/Pay.vue')
   }
 ]
 
