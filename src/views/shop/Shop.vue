@@ -33,7 +33,7 @@
             <div class="tab-item">商家</div>
         </div>
     </div>
-    <Order :shopId = 'shopId'/>
+    <Order />
 </template>
 
 <script>
@@ -49,11 +49,11 @@ export default {
     setup(){
         const route = useRoute()
         const store = useStore()
-        const shopData = reactive(computed(()=> store.state.shopList[route.params.shopIndex]))
-        const shopId = computed(()=> store.state.shopList[route.params.shopIndex].shop_id)
+        const shopData = reactive(computed(()=> store.state.shopList[route.params.shop_id]))
+        const shop_id = route.params.shop_id
         return {
             shopData,
-            shopId
+            shop_id
         }
     }
 }

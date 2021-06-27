@@ -2,7 +2,7 @@
   <div class="goodsList">
       <GoodsItem 
         v-for="(item,index) in goodsList"
-        :data = 'item'
+        :goods = 'item'
         :key="item.goods_id+index"
       />
   </div>

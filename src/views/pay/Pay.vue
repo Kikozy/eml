@@ -41,7 +41,7 @@
             <div class="ex">
                 <div class="tableware">
                     <div class="title">餐具份数</div>
-                    <div class="tablewareController">未选择 ></div>
+                    <div class="tablewareController" @click="openSelector('tableware')">{{showTableware}}</div>
                 </div>
                 <div class="note">
                     <div class="title">订单备注</div>
@@ -63,22 +63,32 @@
         </div>
     </div>
     <div class="darkScreen" ref='darkScreenRef' @click="closeSelector"></div>
-    <Note v-if="selectorState.note"/>
+    <Note v-if="selectorState.note" :closeFun='closeSelector'/>
+    <Tableware v-if="selectorState.tableware" :closeFun='closeSelector' />
 </template>
 
 <script>
-import { reactive , ref} from 'vue'
+import { computed, reactive , ref } from 'vue'
 import Note from './Note'
+import Tableware from './Tableware'
+import { useStore } from 'vuex'
 export default {
     name: 'Pay',
     components: {
-        Note
+        Note,
+        Tableware
     },
     setup(){
+        //使用vuex
+        const store = useStore()
+        //显示具体的餐具
+        const showTableware = computed(()=>store.state.tempOrder.tablewareNum?store.state.tempOrder.tablewareNum+'份':'未选择 >')
         let darkScreenRef = ref(null)
         let selectorState = reactive({
             now: '',
-            note: false
+            note: false,
+            tableware: false
+
         })
         function openSelector(name){
             darkScreenRef.value.style.display = 'block'
@@ -93,7 +103,8 @@ export default {
             selectorState,
             darkScreenRef,
             openSelector,
-            closeSelector
+            closeSelector,
+            showTableware
         }
     }
 }
@@ -165,6 +176,7 @@ export default {
             .goodsList {
                 margin-top: 2.66rem;
                 padding: 0 5.3rem;
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 background-color: #fff;

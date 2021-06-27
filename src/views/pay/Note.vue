@@ -1,18 +1,33 @@
 <template>
   <div class="note">
       <div class="title">订单备注</div>
-      <textarea class="noteArea" name="noteArea" placeholder="填写额外对餐厅和骑士小哥备注的信息" maxlength="100">
+      <textarea class="noteArea" name="noteArea" placeholder="填写额外对餐厅和骑士小哥备注的信息" maxlength="100" v-model="noteContent">
 
       </textarea>
-      <button class="submitNote">确定</button>
+      <button class="submitNote" @click="submitNote">确定</button>
   </div>
 </template>
 
 <script>
+import { onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
 export default {
     name: 'Note',
-    setup(){
-
+    props: ['closeFun'],
+    setup(props){
+        const store = useStore()
+        const noteContent = ref('')
+        function submitNote(){
+            store.commit('changeNote',noteContent.value)
+            props.closeFun()
+        }
+        onMounted(()=>{
+            noteContent.value = store.state.tempOrder.note
+        })
+        return {
+            noteContent,
+            submitNote
+        }
     }
 }
 </script>

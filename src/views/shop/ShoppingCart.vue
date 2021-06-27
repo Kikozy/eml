@@ -25,27 +25,27 @@
             <span class="heji">￥{{money}}</span>
             <span class="yunfei">另需配送费1元</span>
         </div>
-        <div class="payTp">去结算</div>
+        <div class="payTp" @click="tpPayPage">去结算</div>
     </div>
 </template>
 
 <script>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 export default {
     name: 'ShoppingCart',
     setup(){
         const store = useStore()
         const route = useRoute()
-        const shop_id = store.state.shopList[route.params.shopIndex].shop_id
+        const router = useRouter()
+        const shop_id = route.params.shop_id
         let shoppingCartRef = ref(null)
         let detailedListRef = ref(null)
         let shoppingCartState = false
         const money = computed(()=>{
             let num = 0
             for( let item in store.state.cartList?.[shop_id]){
-                console.log(store.state.cartList?.[shop_id][item])
                 num += (store.state.cartList[shop_id][item].goods_price*store.state.cartList[shop_id][item].goods_count)
             }
             return num
@@ -77,6 +77,10 @@ export default {
                 shoppingCartState = true
             }
         }
+        //跳转到付款页面
+        function tpPayPage(){
+            router.push({path: '/Pay'})
+        }
         return {
             data,
             money,
@@ -84,7 +88,8 @@ export default {
             detailedListRef,
             addGoodsCount,
             reduceGoodsCount,
-            shoppingCartController
+            shoppingCartController,
+            tpPayPage
         }
     }
 }

@@ -4,15 +4,15 @@
             <img src="" alt="">
         </div>
         <div class="goodsText">
-            <div class="goodsName">{{data.goods_name}}</div>
-            <span class="goodsDesc">{{data.goods_desc}}</span>
+            <div class="goodsName">{{goods.goods_name}}</div>
+            <span class="goodsDesc">{{goods.goods_desc}}</span>
             <div class="goodsModifier">
-                <span>{{data.goods_sales}}</span>
-                <span>{{data.goods_score}}</span>
+                <span>{{goods.goods_sales}}</span>
+                <span>{{goods.goods_score}}</span>
             </div>
-            <div class="goodsPrice">{{data.goods_price}}</div>
+            <div class="goodsPrice">{{goods.goods_price}}</div>
         </div>
-        <CountingBoard :data='data'/>
+        <CountingBoard :goods='goods'/>
     </div>
 </template>
 
@@ -20,7 +20,7 @@
 import CountingBoard from './CountingBoard'
 export default {
     name: 'GoodsItem',
-    props: ['data'],
+    props: ['goods'],
     components: {
         CountingBoard
     },

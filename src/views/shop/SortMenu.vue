@@ -1,6 +1,6 @@
 <template>
     <div class="sortMenu">
-        <div class="sortItem" v-for="(item,index) in sortList" :key="index+item" @click="changeSort(item)">{{item}}</div>
+        <div class="sortItem" v-for="(item,index) in sortList" :key="index+item" @click="getSortInfo(item)">{{item}}</div>
     </div>
 </template>
 
@@ -8,14 +8,19 @@
 import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
+import { useRoute } from 'vue-router'
 export default {
     name: 'SortMenu',
-    props: ['shopId'],
-    setup(props){
+    setup(){
         let sortList = reactive([])
+        const route = useRoute()
+        const shop_id = route.params.shop_id
         const store = useStore()
+
+        //获取分类列表
+        
         axios.post(`http://localhost:8848/getGoodsType`,{
-            shopId: props.shopId
+            shop_id
         })
         .then((res)=>{
             sortList = res.data.forEach(item => {
@@ -23,24 +28,26 @@ export default {
             });
         })
         .catch((err)=>{
-            console.log(err)
+            console.log('[分类菜单]: 获取分类列表失败！',err)
         })
 
-        function changeSort(sort){
+        //获取分类的商品列表
+        function getSortInfo(sort){
             axios.post('http://localhost:8848/getGoodsList',{
-                shop_id: props.shopId,
+                shop_id,
                 goods_sort: sort
             })
             .then((data)=>{
-                store.commit('changeGoodsList',data.data)
+                console.log('[分类菜单]: vuex即将初始化[商品列表]仓库')
+                store.commit('initGoodsList',data.data)
             })
             .catch((err)=>{
-                console.log(err)
+                console.log('获取分类商品信息失败！',err)
             })
         }
         return {
             sortList,
-            changeSort
+            getSortInfo
         }
     }
 }

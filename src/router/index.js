@@ -8,7 +8,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/shop/:shopIndex',
+    path: '/shop/:shop_id',
     name: 'Shop',
     component:()=>import('../views/shop/Shop.vue')
   },

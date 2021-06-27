@@ -7,42 +7,28 @@
 </template>
 
 <script>
-import { computed } from '@vue/runtime-core'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
     name: 'CountingBoard',
-    props: ['data'],
+    props: ['goods'],
     setup(props){
         const store = useStore()
         const route = useRoute()
-        const shop_id = store.state.shopList[route.params.shopIndex].shop_id
-        const count = computed(()=> store.state.cartList?.[shop_id]?.[props.data.goods_id]?.goods_count)
-        // const checkShop = ()=>{
+        const shop_id = route.params.shop_id
+        const count = computed(()=> store.state.cartList?.[shop_id]?.[props.goods.goods_id]?.goods_count)
 
-        // }
-        const chekGoods = ()=>{
-            if(store.state.cartList[shop_id]?.[props.data.goods_id])
-            {
-                store.commit('addCount',{
-                    shop_id,
-                    goods_id: props.data.goods_id
-                    })
-            }else{
-                store.commit('addGoods',{
-                        shop_id,
-                        goods_id: props.data.goods_id,
-                        goods_name: props.data.goods_name,
-                        goods_price: props.data.goods_price
-                })
-            }
-        }
+
         function addFun(){
+            console.log('[购物车]准备添加商品，正在判断是否合法')
+            //检测一下购物车中的商店是否存在
             if(store.state.cartList?.[shop_id])
             {
-                console.log('y')
+                console.log('[购物车]商店已经创建！继续执行！')
                 chekGoods()
             }else{
+                console.log('[购物车]商店没有创建！正在创建商店！')
                 store.commit('createCartListShop',shop_id)
                 chekGoods()
             }
@@ -51,8 +37,27 @@ export default {
         function reduceFun(){
             store.commit('reduceCount',{
                    shop_id,
-                   goods_id: props.data.goods_id
+                   goods_id: props.goods.goods_id
             })
+        }
+        //检查这个商品是否存在
+        const chekGoods = ()=>{
+            if(store.state.cartList[shop_id]?.[props.goods.goods_id])
+            {
+                console.log('[购物车]: 准备增加商品数量...')
+                store.commit('addCount',{
+                    shop_id,
+                    goods_id: props.goods.goods_id
+                })
+            }else{
+                console.log('[购物车]: 这是一个从来没有添加的商品，准备添加到购物车')
+                store.commit('addGoods',{
+                        shop_id,
+                        goods_id: props.goods.goods_id,
+                        goods_name: props.goods.goods_name,
+                        goods_price: props.goods.goods_price
+                })
+            }
         }
         return {
             addFun,
