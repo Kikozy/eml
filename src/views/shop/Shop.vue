@@ -2,11 +2,11 @@
     <div class="shopInfo">
         <!-- 店铺背景图片 -->
         <div class="shopBgImg">
-            <img src="" alt="">
+            <img :src="shopData.shop_bg_img" alt="">
         </div>
         <!-- 店铺LOGO -->
         <div class="shopLOGO">
-            <img src="" alt="">
+            <img :src="shopData.shop_logo" alt="">
         </div>
         <!-- 店铺名字 -->
         <div class="shopName">{{shopData.shop_name}}</div>
@@ -68,7 +68,9 @@ export default {
         .shopBgImg {
             width: 100%;
             height: 25rem;
-            background-color: pink;
+            img {
+                width: 100%;
+            }
         }
         .shopLOGO {
             width: 20rem;
@@ -77,7 +79,9 @@ export default {
             left: 50%;
             top: 10.66rem;
             transform: translateX(-50%);
-            border: 0.2rem solid orange;
+            img {
+                width: 100%;
+            }
         }
         .shopName {
             margin-top: 10.66rem;

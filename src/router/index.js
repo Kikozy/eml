@@ -13,9 +13,19 @@ const routes = [
     component:()=>import('../views/shop/Shop.vue')
   },
   {
-    path: '/pay',
+    path: '/pay/:shop_id',
     name: 'Pay',
     component: ()=>import('../views/pay/Pay.vue')
+  },
+  {
+    path: '/History',
+    name: 'History',
+    component: ()=>import('../views/history/History.vue')
+  },
+  {
+    path: '/My',
+    name: 'My',
+    component: ()=>import('../views/my/My.vue')
   }
 ]
 

@@ -79,7 +79,7 @@ export default {
         }
         //跳转到付款页面
         function tpPayPage(){
-            router.push({path: '/Pay'})
+            router.push({name: 'Pay',params: {shop_id}})
         }
         return {
             data,

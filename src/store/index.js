@@ -8,13 +8,53 @@ export default createStore({
     cartList: {},
     //临时账单
     tempOrder: {
-      goods: {},
       address: '',
       note: '',
       tablewareNum: 0
+    },
+    bottomBarState: {
+      home: true,
+      faxian: false,
+      dingdan: false,
+      my: false,
+      now: 'home'
     }
   },
   mutations: {
+    //提交订单
+    submitOrder(state,data){
+      console.log('[vux][提交订单]: 准备生成订单...',state.cartList[data.shop_id])
+      console.log(data.total.value)
+      let order = {
+        shop_id: data.shop_id,
+        total: data.total.value,
+        goods: {}
+      }
+      for(let index in state.cartList[data.shop_id]){
+        console.log(state.cartList[data.shop_id][index])
+        order.goods[index] = {
+          goods_name: state.cartList[data.shop_id][index].goods_name,
+          goods_price: state.cartList[data.shop_id][index].goods_price,
+          goods_count: state.cartList[data.shop_id][index].goods_count
+        }
+      }
+      console.log('搞好了',order)
+      axios.post('http://localhost:8848/createOrder',{
+        order
+      })
+      .then(()=>{
+        console.log('ok')
+      })
+      .catch(()=>{
+        console.log('gg')
+      })
+    },
+    //底部栏的跳转
+    changeBottomBarSelect(state,page){
+      state.bottomBarState[state.bottomBarState.now] = false
+      state.bottomBarState[page] = true
+      state.bottomBarState.now = page
+    },
     //初始化[商店列表]仓库
     initShopList(state,data){
       let newData = {}
@@ -26,7 +66,7 @@ export default createStore({
     //初始化[商品列表]仓库
     initGoodsList(state,data){
       state.goodsList = data
-      console.log('[vuex][商品列表]：初始化完毕 ✔️')
+      console.log('[vuex][商品列表]：初始化完毕 ✔️',data  )
     },
     //增加商品的数量
     addCount(state,info){ 
@@ -35,12 +75,9 @@ export default createStore({
     },
     //增加商品
     addGoods(state,info){
-      state.cartList[info.shop_id][info.goods_id] = {
-        goods_id: info.goods_id,
-        goods_name: info.goods_name,
-        goods_price: info.goods_price,
-        goods_count: 1
-      }
+      console.log('[vuex][增加新商品]：准备增加商品，正在检查数据...',info)
+      state.cartList[info.shop_id][info.goods.goods_id] = info.goods
+      state.cartList[info.shop_id][info.goods.goods_id].goods_count = 1
       console.log('[vuex][增加新商品]：增加新商品完毕！✔️', state.cartList[info.shop_id])
     },
     //[减少商品数量]

@@ -1,7 +1,7 @@
 <template>
 <div class="shopItem">
     <div class="imgBox">
-        <img src="" alt="">
+        <img :src='shopData.shop_logo' alt="">
     </div>
     <div class="shopText">
         <p class="name">{{shopData.shop_name}}</p>
@@ -36,13 +36,13 @@ export default {
     .shopItem {
         padding: 2.66rem 0;
         display: flex;
-        border-bottom: 0.26rem solid #999999;
+        border-bottom: 0.26rem solid #ebeaea;
         //店铺LOGO
         .imgBox {
                 height: 17.33rem;
                 width: 17.33rem;
-                background-color: pink;
             img {
+                width: 100%;
                 width: 100%;
             }
         }
@@ -69,10 +69,16 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 .cost {
+                    width: 55%;
+                    display: flex;
+                    justify-content: space-between;
                     font-size: 3.2rem;
                     color: #666666;
                 }
                 .range {
+                    width: 30%;
+                    display: flex;
+                    justify-content: space-between;
                     font-size: 3.2rem;
                     color: #999999;
                 }
@@ -80,7 +86,7 @@ export default {
             //标签
             .tag {
                 margin-top: 1.33rem;
-                width: 14.66rem;
+                max-width: 17rem;
                 font-size: 3.2rem;
                 -webkit-transform-origin-x: 0;
                 transform:scale(0.8);

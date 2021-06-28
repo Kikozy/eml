@@ -53,9 +53,7 @@ export default {
                 console.log('[购物车]: 这是一个从来没有添加的商品，准备添加到购物车')
                 store.commit('addGoods',{
                         shop_id,
-                        goods_id: props.goods.goods_id,
-                        goods_name: props.goods.goods_name,
-                        goods_price: props.goods.goods_price
+                        goods: {...props.goods}
                 })
             }
         }

@@ -18,30 +18,24 @@
             </div>
             <div class="goodsList">
                 <div class="shopTitle">SEVENBUS(重庆北城天街店)</div>
-                <div class="goodsItem">
-                    <img src="" alt="">
-                    <div class="goodsName">奥利奥冰淇淋</div>
-                    <div class="goodsCount">X1</div>
-                    <div class="goodsPreice">￥12</div>
-                </div>
-                <div class="goodsItem">
-                    <img src="" alt="">
-                    <div class="goodsName">奥利奥冰淇淋</div>
-                    <div class="goodsCount">X1</div>
-                    <div class="goodsPreice">￥12</div>
+                <div class="goodsItem" v-for="(item,index) in goodsList" :key="item.goods_id+index">
+                    <img :src="item.goods_img" alt="">
+                    <div class="goodsName">{{item.goods_name}}</div>
+                    <div class="goodsCount">{{item.goods_count}}</div>
+                    <div class="goodsPreice">{{item.goods_price * item.goods_count}}</div>
                 </div>
                 <div class="rangeCost">
                     <div class="title">配送费</div>
                     <div class="money">1元</div>
                 </div>
                 <div class="count">
-                    <div class="countNum">小计 ￥25</div>
+                    <div class="countNum">小计 ￥{{total}}</div>
                 </div>
             </div>
             <div class="ex">
                 <div class="tableware">
                     <div class="title">餐具份数</div>
-                    <div class="tablewareController" @click="openSelector('tableware')">{{showTableware}}</div>
+                    <div class="tablewareController" @click="openSelector('tableware')">{{showTableware?showTableware:'未选择 >'}}</div>
                 </div>
                 <div class="note">
                     <div class="title">订单备注</div>
@@ -58,8 +52,8 @@
             </div>
         </div>
         <div class="bottomBar">
-            <div class="countMoney">￥25</div>
-            <div class="payButton">去支付</div>
+            <div class="countMoney">￥{{total}}</div>
+            <div class="payButton" @click="submitOrderFun">去支付</div>
         </div>
     </div>
     <div class="darkScreen" ref='darkScreenRef' @click="closeSelector"></div>
@@ -68,10 +62,11 @@
 </template>
 
 <script>
-import { computed, reactive , ref } from 'vue'
+import { computed, onMounted, reactive , ref } from 'vue'
 import Note from './Note'
 import Tableware from './Tableware'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 export default {
     name: 'Pay',
     components: {
@@ -81,8 +76,20 @@ export default {
     setup(){
         //使用vuex
         const store = useStore()
+        const route = useRoute()
+        const shop_id = route.params.shop_id
+        const goodsList = reactive(computed(()=>store.state.cartList[shop_id]))
+        const total = reactive(computed(()=>{
+            let tempStore = store.state.cartList[shop_id]
+            let money = 0
+            for(let goods_id in tempStore){
+                money += tempStore[goods_id].goods_price*tempStore[goods_id].goods_count
+            }
+            return money
+        }))
+
         //显示具体的餐具
-        const showTableware = computed(()=>store.state.tempOrder.tablewareNum?store.state.tempOrder.tablewareNum+'份':'未选择 >')
+        const showTableware = computed(()=>store.state.tempOrder.tablewareNum)
         let darkScreenRef = ref(null)
         let selectorState = reactive({
             now: '',
@@ -99,12 +106,25 @@ export default {
             darkScreenRef.value.style.display = 'none'
             selectorState[selectorState.now] = false
         }
+        function submitOrderFun(){
+            console.log('[支付界面]：正在请求vuex处理订单生成...')
+            store.commit('submitOrder',{
+                shop_id,
+                total
+            })
+        }
+        onMounted(()=>{
+            console.log('[支付界面]正在导入购物车中的内容...',store.state.cartList[shop_id])
+        })
         return {
             selectorState,
             darkScreenRef,
             openSelector,
             closeSelector,
-            showTableware
+            showTableware,
+            goodsList,
+            total,
+            submitOrderFun
         }
     }
 }

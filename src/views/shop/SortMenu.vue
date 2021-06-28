@@ -38,7 +38,7 @@ export default {
                 goods_sort: sort
             })
             .then((data)=>{
-                console.log('[分类菜单]: vuex即将初始化[商品列表]仓库')
+                console.log('[分类菜单]: vuex即将初始化[商品列表]仓库',data)
                 store.commit('initGoodsList',data.data)
             })
             .catch((err)=>{
