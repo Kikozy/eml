@@ -21,34 +21,6 @@ export default createStore({
     }
   },
   mutations: {
-    //提交订单
-    submitOrder(state,data){
-      console.log('[vux][提交订单]: 准备生成订单...',state.cartList[data.shop_id])
-      console.log(data.total.value)
-      let order = {
-        shop_id: data.shop_id,
-        total: data.total.value,
-        goods: {}
-      }
-      for(let index in state.cartList[data.shop_id]){
-        console.log(state.cartList[data.shop_id][index])
-        order.goods[index] = {
-          goods_name: state.cartList[data.shop_id][index].goods_name,
-          goods_price: state.cartList[data.shop_id][index].goods_price,
-          goods_count: state.cartList[data.shop_id][index].goods_count
-        }
-      }
-      console.log('搞好了',order)
-      axios.post('http://localhost:8848/createOrder',{
-        order
-      })
-      .then(()=>{
-        console.log('ok')
-      })
-      .catch(()=>{
-        console.log('gg')
-      })
-    },
     //底部栏的跳转
     changeBottomBarSelect(state,page){
       state.bottomBarState[state.bottomBarState.now] = false
@@ -109,6 +81,38 @@ export default createStore({
     }
   },
   actions: {
+    //提交订单
+    submitOrder(store,data){
+      console.log('[vux][提交订单]: 准备生成订单...',store.state.cartList[data.shop_id])
+      console.log(data.total.value)
+      let order = {
+        shop_id: data.shop_id,
+        shop_name: data.shop_name,
+        shop_logo: data.shop_logo,
+        goods_list: {},
+        total: data.total.value,
+        note: store.state.tempOrder.note,
+        tablewareNum: store.state.tempOrder.tablewareNum
+      }
+      for(let index in store.state.cartList[data.shop_id]){
+        order.goods_list[index] = {
+          goods_name: store.state.cartList[data.shop_id][index].goods_name,
+          goods_price: store.state.cartList[data.shop_id][index].goods_price,
+          goods_count: store.state.cartList[data.shop_id][index].goods_count,
+          goods_img: store.state.cartList[data.shop_id][index].goods_img
+        }
+      }
+      console.log('[vuex][订单提交]：准备写入数据库...',order)
+      axios.post('http://localhost:8848/createOrder',{
+        order
+      })
+      .then((res)=>{
+        console.log('[vuex][订单提交]：成功写入数据库！✔️',res)
+      })
+      .catch(()=>{
+        console.log('gg')
+      })
+    },
     getShopListData(store){
       axios.get('http://localhost:8848/')
       .then((res)=>{

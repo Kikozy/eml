@@ -67,13 +67,21 @@ export default {
         function shoppingCartController(){
             let shoppingCartHeight = shoppingCartRef.value.getBoundingClientRect().height
             if(shoppingCartState){
+                //显示->定位实际高度
                 shoppingCartRef.value.style.bottom = `-${shoppingCartHeight/375*100}rem`
-                detailedListRef.value.style.overflow = 'visible'
                 detailedListRef.value.style.height = 'auto'
+                setTimeout(()=>{
+                    detailedListRef.value.style.opacity = 0
+                    detailedListRef.value.style.display = 'none'
+                },300)
+                
+                
                 shoppingCartState = false
             }else{
+                console.log('关闭')
+                detailedListRef.value.style.display = 'block'
+                detailedListRef.value.style.opacity = 1
                 shoppingCartRef.value.style.bottom = '12.8rem'
-                shoppingCartRef.value.style.overflow = 'hidden'
                 shoppingCartState = true
             }
         }
@@ -89,7 +97,8 @@ export default {
             addGoodsCount,
             reduceGoodsCount,
             shoppingCartController,
-            tpPayPage
+            tpPayPage,
+            shoppingCartState
         }
     }
 }
@@ -124,7 +133,7 @@ export default {
             }
         }
         .detailedList {
-            height: 0;
+            opacity: 0;
             overflow: hidden;
             .detailedItem {
                 display: flex;

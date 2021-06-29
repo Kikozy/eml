@@ -72,19 +72,19 @@ export default {
         display: flex;
         justify-content: flex-end;
         position: absolute;
-        width: 70px;
-        bottom: 10px;
-        right: 10px;
+        width: 18.66rem;
+        bottom: 2.66rem;
+        right: 2.66rem;
         
         .reduceBtn {
             border: 0;
-            right: 10px;
-            bottom: 10px;
-            height: 22px;
-            width: 22px;
+            right: 2.66rem;
+            bottom: 2.66rem;
+            height: 5.86rem;
+            width: 5.86rem;
             border-radius: 50%;
             background-color: rgb(35, 149, 255);
-            font-weight: bolder;
+            font-size: 3.73rem;
             color: white;
             text-align: center;
         }
@@ -93,13 +93,13 @@ export default {
         }
         .addBtn {
             border: 0;
-            right: 10px;
-            bottom: 10px;
-            height: 22px;
-            width: 22px;
+            right: 2.66rem;
+            bottom: 2.66rem;
+            height: 5.86rem;
+            width: 5.86rem;
             border-radius: 50%;
             background-color: rgb(35, 149, 255);
-            font-weight: bolder;
+            font-size: 3.73rem;
             color: white;
             text-align: center;
         }

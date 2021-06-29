@@ -1,16 +1,19 @@
 <template>
     <div class="historyItem">
         <div class="logoBox">
-            <img src="" alt="">
+            <img :src="data.order_data.order.shop_logo" alt="">
         </div>
         <div class="shopInfo">
             <div class="shopName">
-                <span class="title">商店名字</span>
+                <span class="title" :data-text="new Date(Number(data.order_time)).toLocaleString('chinese', { hour12: false })">{{data.order_data.order.shop_name}}</span>
                 <span class="state">已送达</span>
             </div>
             <div class="goodsShow">
-                <span class="goods">购买的商品</span>
-                <span class="price">￥24.88</span>
+                <span class="goods">
+                    {{Object.values(data.order_data.order.goods_list)[0].goods_name}}
+                    等{{Object.keys(data.order_data.order.goods_list).length}}件商品
+                </span>
+                <span class="price">￥{{data.order_data.order.total}}</span>
             </div>
         </div>
         <div class="btnArea">
@@ -21,8 +24,13 @@
 </template>
 
 <script>
-export default {
 
+export default {
+    name: 'HistoryItem',
+    props: ['data'],
+    setup(){
+
+    }
 }
 </script>
 
@@ -48,10 +56,19 @@ export default {
                 height: 12rem;
                 display: flex;
                 justify-content: space-between;
+                position: relative;
                 border-bottom: 0.2rem solid rgb(238, 238, 238);
                 .title {
                     font-size: 4.26rem;
                     color: #333;
+                    &::after {
+                        content: attr(data-text);
+                        position: absolute;
+                        left: 0;
+                        top: 6.13rem;
+                        font-size: 2.66rem;
+                        color: #666;
+                    }
                 }
                 .state {
                     font-size: 3.46rem;

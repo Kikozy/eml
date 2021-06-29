@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { reactive , computed , } from 'vue'
+import { reactive , computed, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import Order from './Order'
@@ -51,6 +51,10 @@ export default {
         const store = useStore()
         const shopData = reactive(computed(()=> store.state.shopList[route.params.shop_id]))
         const shop_id = route.params.shop_id
+        onUnmounted(()=>{
+            console.log('[商铺页面]：页面被关闭，我将要清除数据！')
+            store.state.cartList[route.params.shop_id] = {}
+        })
         return {
             shopData,
             shop_id

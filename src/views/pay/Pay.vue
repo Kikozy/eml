@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="goodsList">
-                <div class="shopTitle">SEVENBUS(重庆北城天街店)</div>
+                <div class="shopTitle">{{shop.shop_name}}</div>
                 <div class="goodsItem" v-for="(item,index) in goodsList" :key="item.goods_id+index">
                     <img :src="item.goods_img" alt="">
                     <div class="goodsName">{{item.goods_name}}</div>
@@ -78,6 +78,7 @@ export default {
         const store = useStore()
         const route = useRoute()
         const shop_id = route.params.shop_id
+        const shop = reactive(computed(()=>store.state.shopList[route.params.shop_id]))
         const goodsList = reactive(computed(()=>store.state.cartList[shop_id]))
         const total = reactive(computed(()=>{
             let tempStore = store.state.cartList[shop_id]
@@ -108,8 +109,10 @@ export default {
         }
         function submitOrderFun(){
             console.log('[支付界面]：正在请求vuex处理订单生成...')
-            store.commit('submitOrder',{
+            store.dispatch('submitOrder',{
                 shop_id,
+                shop_name: shop.value.shop_name,
+                shop_logo: shop.value.shop_logo,
                 total
             })
         }
@@ -124,7 +127,8 @@ export default {
             showTableware,
             goodsList,
             total,
-            submitOrderFun
+            submitOrderFun,
+            shop
         }
     }
 }
